@@ -1,5 +1,6 @@
 const mongoose=require('mongoose')
-mongoose.connect("mongodb+srv://sreevignesh27:vignesh123@cluster0.ayq2l.mongodb.net/quizmate");
+require('dotenv').config();
+mongoose.connect(process.env.MONGO_URI);
 const userSchema=new mongoose.Schema({
     username:String,
     password:String
