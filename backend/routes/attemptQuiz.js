@@ -15,8 +15,10 @@ attemptQuizRouter.post("/",authMiddleware,async(req,res)=>{
             msg:"Wrong quiz id"
         })
     }
+    const result = quiz.listOfQuestions.map(i => ({ questionName: i.questionName, options: i.options }));
+
     res.json({
-        questions:quiz.listOfQuestions,
+        questions:result,
     })
 })
 attemptQuizRouter.post("/answers",authMiddleware,async(req,res)=>{

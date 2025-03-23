@@ -7,6 +7,13 @@ signUpRouter.use(express.json());
 signUpRouter.post("/",async(req,res)=>
 {
     const {username,password}=req.body;
+    const userExists=await user.findOne({username});
+    if(userExists)
+    {
+        return res.json({
+            msg:"User already exists"
+        })
+    }
     await user.create({
         username,
         password
@@ -14,7 +21,7 @@ signUpRouter.post("/",async(req,res)=>
     const token=jwt.sign({username},key);
     console.log(token);
     res.json({
-        key:token
+        msg:token
     })
 })
 module.exports={

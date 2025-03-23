@@ -6,6 +6,8 @@ const attemptQuizRouter = require('./routes/attemptQuiz');
 const checkResultsRouter = require('./routes/checkResults');
 
 const app=new express();
+const cors=require('cors')
+app.use(cors())
 app.use("/signup",signUpRouter);
 app.use("/login",loginRouter);
 app.use("/createQuiz",createQuizRouter);

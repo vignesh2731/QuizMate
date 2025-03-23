@@ -1,5 +1,5 @@
 const express=require('express');
-const createQuizRouter=express.Router();
+const   createQuizRouter=express.Router();
 createQuizRouter.use(express.json());
 const authMiddleware = require('../middleware');
 const { quizzes } = require('../db');
