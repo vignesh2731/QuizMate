@@ -1,4 +1,4 @@
-# 🎯 Quiz Platform
+# 🎯 QuizMate
 
 ## 📌 Overview
 The **Quiz Platform** is a web-based application that allows quiz setters to create multiple-choice questions (MCQs) using text or voice input. Each quiz is secured with a unique code and password, ensuring controlled access for students. After completion, student scores are automatically sent to the quiz setter for evaluation.
