@@ -77,6 +77,7 @@ export function QuizComp() {
       );
 
       setMessage(`✅ ${response.data.msg}`);
+      alert("Quiz has been created successfully");
     } catch (error) {
       setMessage("❌ Error creating quiz: " + (error.response?.data?.msg || error.message));
     }
