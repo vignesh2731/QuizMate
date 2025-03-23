@@ -58,7 +58,7 @@ export function QuizComp() {
     }
 
     const formattedQuestions = questions.map((q) => ({
-      question: q.question,
+      questionName: q.question,
       options: q.options,
       correctAnswer: q.correct,
     }));

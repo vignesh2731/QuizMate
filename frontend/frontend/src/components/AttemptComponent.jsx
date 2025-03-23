@@ -6,7 +6,7 @@ export function AttemptComponent() {
   const [quizCode, setQuizCode] = useState("");
   const [quizPassword, setQuizPassword] = useState("");
   const [questions, setQuestions] = useState([]);
-  const [selectedAnswers, setSelectedAnswers] = useState([]); 
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
@@ -20,23 +20,31 @@ export function AttemptComponent() {
     try {
       const response = await axios.post(
         "http://localhost:3000/attemptQuiz",
-        {
-          quizCode,
-          quizPassword,
-        },
-        {
-          headers: { Authorization: `${token}` },
-        }
+        { quizCode, quizPassword },
+        { headers: { Authorization: `${token}` } }
       );
+
+      console.log("✅ Full API Response:", response.data);
 
       if (response.data.msg) {
         setMessage("❌ " + response.data.msg);
-      } else {
-        setQuestions(response.data.questions);
-        setSelectedAnswers(new Array(response.data.questions.length).fill("")); 
+      } else if (Array.isArray(response.data.questions)) {
+        console.log("🟢 Extracted Questions:", response.data.questions);
+
+        // Ensure `questionName` is always present
+        const formattedQuestions = response.data.questions.map((q, index) => ({
+          questionName: q?.questionName || `⚠️ Missing question text`,
+          options: Array.isArray(q?.options) ? q.options : [],
+        }));
+
+        setQuestions(formattedQuestions);
+        setSelectedAnswers(new Array(formattedQuestions.length).fill(""));
         setMessage("");
+      } else {
+        setMessage("❌ Unexpected response format. Please try again.");
       }
     } catch (error) {
+      console.error("❌ Fetch Quiz Error:", error);
       setMessage("❌ Error fetching quiz: " + (error.response?.data?.msg || error.message));
     }
   };
@@ -50,9 +58,7 @@ export function AttemptComponent() {
   };
 
   const handleSubmit = () => {
-    navigate("/answers", {
-      state: { quizCode,questions, selectedAnswers },
-    });
+    navigate("/answers", { state: { quizCode, questions, selectedAnswers } });
   };
 
   return (
@@ -88,20 +94,24 @@ export function AttemptComponent() {
             {questions.map((q, qIndex) => (
               <div key={qIndex} className="mb-4 p-3 bg-white rounded shadow">
                 <p className="font-semibold">
-                  {qIndex + 1}. {q.question}
+                  {qIndex + 1}. {q.questionName}
                 </p>
-                {q.options.map((option, oIndex) => (
-                  <label key={oIndex} className="flex items-center gap-2 mt-1">
-                    <input
-                      type="radio"
-                      name={`question-${qIndex}`}
-                      value={option}
-                      checked={selectedAnswers[qIndex] === option}
-                      onChange={() => handleAnswerSelect(qIndex, option)}
-                    />
-                    {option}
-                  </label>
-                ))}
+                {q.options.length > 0 ? (
+                  q.options.map((option, oIndex) => (
+                    <label key={oIndex} className="flex items-center gap-2 mt-1">
+                      <input
+                        type="radio"
+                        name={`question-${qIndex}`}
+                        value={option}
+                        checked={selectedAnswers[qIndex] === option}
+                        onChange={() => handleAnswerSelect(qIndex, option)}
+                      />
+                      {option}
+                    </label>
+                  ))
+                ) : (
+                  <p className="text-red-500">⚠️ Options not available</p>
+                )}
               </div>
             ))}
 

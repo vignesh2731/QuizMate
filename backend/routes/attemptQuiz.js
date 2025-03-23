@@ -16,8 +16,12 @@ attemptQuizRouter.post("/",authMiddleware,async(req,res)=>{
         })
     }
     const result = quiz.listOfQuestions.map(i => ({ questionName: i.questionName, options: i.options }));
-
+    console.log({
+        questionName:quiz.listOfQuestions.questionName,
+        questions:result,
+    })
     res.json({
+        questionName:quiz.listOfQuestions.questionName,
         questions:result,
     })
 })
