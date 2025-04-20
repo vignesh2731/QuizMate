@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import { NavBar } from "./NavBar";
 
 export function AnswersComp() {
   const location = useLocation();
@@ -31,15 +32,18 @@ export function AnswersComp() {
   };
 
   return (
-    <div className="p-5 bg-gray-100 rounded-lg shadow-md w-96 mx-auto">
-      <h2 className="text-xl font-bold mb-4">📊 Submit Your Answers</h2>
+    <div>
+    <NavBar/>
+      <div className="p-5 bg-gray-100 rounded-lg shadow-md w-96 mx-auto">
+        <h2 className="text-xl font-bold mb-4">📊 Submit Your Answers</h2>
 
-      <button onClick={submitAnswers} className="bg-green-500 text-white px-4 py-2 rounded w-full">
-        ✅ Submit Quiz
-      </button>
+        <button onClick={submitAnswers} className="bg-green-500 text-white px-4 py-2 rounded w-full">
+          ✅ Submit Quiz
+        </button>
 
-      {message && <p className="mt-3 text-center font-semibold">{message}</p>}
-      {score !== null && <p className="text-xl font-bold text-center mt-2">🎯 Your Score: {score}</p>}
+        {message && <p className="mt-3 text-center font-semibold">{message}</p>}
+        {score !== null && <p className="text-xl font-bold text-center mt-2">🎯 Your Score: {score}</p>}
+      </div>
     </div>
   );
 }

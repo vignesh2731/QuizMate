@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { NavBar } from "./NavBar";
 
 export function QuizComp() {
   const [quizCode, setQuizCode] = useState("");
@@ -33,21 +34,35 @@ export function QuizComp() {
   };
 
   const addQuestion = () => {
-    setQuestions([...questions, { question: "", options: ["", "", "", ""], correctAnswer: "" }]);
+    setQuestions([...questions, { question: "", options: ["", "", "", ""], correct: "" }]);
   };
 
-  const startSpeechRecognition = (index) => {
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  const startSpeechRecognition = (setter) => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Speech Recognition not supported on this browser");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
     recognition.lang = "en-US";
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
     recognition.onresult = (event) => {
       const speechText = event.results[0][0].transcript;
-      handleQuestionChange(index, speechText);
+      setter(speechText);
     };
 
     recognition.start();
+  };
+
+  const startQuestionVoice = (index) => {
+    startSpeechRecognition((text) => handleQuestionChange(index, text));
+  };
+
+  const startOptionVoice = (qIndex, oIndex) => {
+    startSpeechRecognition((text) => handleOptionChange(qIndex, oIndex, text));
   };
 
   const createQuiz = async () => {
@@ -84,6 +99,8 @@ export function QuizComp() {
   };
 
   return (
+    <div>
+      <NavBar/>
     <div className="pt-10 bg-gray-100 rounded-lg shadow-md w-200 mx-auto">
       <h2 className="text-xl font-bold mb-4">Create a Quiz</h2>
 
@@ -104,7 +121,8 @@ export function QuizComp() {
 
       {questions.map((q, qIndex) => (
         <div key={qIndex} className="mb-4 p-3 bg-white rounded shadow">
-          <div className="flex items-center gap-2">
+          {/* Question Field */}
+          <div className="flex items-center gap-2 mb-2">
             <input
               type="text"
               placeholder="Question"
@@ -112,22 +130,36 @@ export function QuizComp() {
               value={q.question}
               onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
             />
-            <button onClick={() => startSpeechRecognition(qIndex)} className="p-2 bg-gray-200 rounded-full">
+            <button
+              onClick={() => startQuestionVoice(qIndex)}
+              className="p-2 bg-gray-200 rounded-full text-lg"
+              title="Speak Question"
+            >
               🎤
             </button>
           </div>
 
+          {/* Options */}
           {q.options.map((option, oIndex) => (
-            <input
-              key={oIndex}
-              type="text"
-              placeholder={`Option ${oIndex + 1}`}
-              className="w-full p-2 border rounded mb-1"
-              value={option}
-              onChange={(e) => handleOptionChange(qIndex, oIndex, e.target.value)}
-            />
+            <div key={oIndex} className="flex items-center gap-2 mb-1">
+              <input
+                type="text"
+                placeholder={`Option ${oIndex + 1}`}
+                className="w-full p-2 border rounded"
+                value={option}
+                onChange={(e) => handleOptionChange(qIndex, oIndex, e.target.value)}
+              />
+              <button
+                onClick={() => startOptionVoice(qIndex, oIndex)}
+                className="p-2 bg-blue-200 rounded-full text-lg"
+                title={`Speak Option ${oIndex + 1}`}
+              >
+                🎤
+              </button>
+            </div>
           ))}
 
+          {/* Correct Answer Dropdown */}
           <select
             className="w-full p-2 border rounded"
             value={q.correct}
@@ -145,14 +177,21 @@ export function QuizComp() {
         </div>
       ))}
 
-      <button onClick={addQuestion} className="bg-blue-500 text-white px-4 py-2 rounded mb-2 w-full">
+      <button
+        onClick={addQuestion}
+        className="bg-blue-500 text-white px-4 py-2 rounded mb-2 w-full"
+      >
         ➕ Add Question
       </button>
-      <button onClick={createQuiz} className="bg-green-500 text-white px-4 py-2 rounded w-full">
+      <button
+        onClick={createQuiz}
+        className="bg-green-500 text-white px-4 py-2 rounded w-full"
+      >
         ✅ Create Quiz
       </button>
 
       {message && <p className="mt-3 text-center font-semibold">{message}</p>}
+    </div>
     </div>
   );
 }

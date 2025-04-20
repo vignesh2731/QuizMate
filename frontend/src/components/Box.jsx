@@ -7,6 +7,7 @@ export function Box({ name, ending,route}) {
     const [message,setMessage]=useState("");
     const navigate=useNavigate();
     return (
+        <div>   
         <div className="bg-white rounded-2xl h-90 p-6 flex flex-col items-center justify-center space-y-4 w-80">
             <div className="text-center font-semibold text-lg">{name}</div>
 
@@ -42,6 +43,7 @@ export function Box({ name, ending,route}) {
                 {ending}
             </button>
             {message}
+        </div>
         </div>
     );
 }

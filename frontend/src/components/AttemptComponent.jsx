@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { NavBar } from "./NavBar";
 
 export function AttemptComponent() {
   const [quizCode, setQuizCode] = useState("");
@@ -31,7 +32,7 @@ export function AttemptComponent() {
       } else if (Array.isArray(response.data.questions)) {
         console.log("🟢 Extracted Questions:", response.data.questions);
 
-        // Ensure `questionName` is always present
+        
         const formattedQuestions = response.data.questions.map((q, index) => ({
           questionName: q?.questionName || `⚠️ Missing question text`,
           options: Array.isArray(q?.options) ? q.options : [],
@@ -62,6 +63,8 @@ export function AttemptComponent() {
   };
 
   return (
+    <div>
+      <NavBar/>
     <div className="pt-40">
       <div className="p-5 bg-gray-100 rounded-lg shadow-md w-96 mx-auto">
         <h2 className="text-xl font-bold mb-4">📌 Attempt a Quiz</h2>
@@ -124,6 +127,7 @@ export function AttemptComponent() {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { NavBar } from "./NavBar";
 
 export function CheckResults() {
   const [quizzes, setQuizzes] = useState([]);
@@ -12,7 +13,6 @@ export function CheckResults() {
     fetchHostedQuizzes();
   }, []);
 
-  // Fetch quizzes hosted by the user
   const fetchHostedQuizzes = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -61,6 +61,8 @@ export function CheckResults() {
   };
 
   return (
+    <div>
+      <NavBar/>
     <div className="bg-violet-500 h-screen flex flex-col items-center pt-10">
       <h1 className="text-white text-4xl font-bold">📥 Check your Results</h1>
 
@@ -107,6 +109,7 @@ export function CheckResults() {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

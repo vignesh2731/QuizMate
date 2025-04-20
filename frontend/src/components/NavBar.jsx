@@ -1,13 +1,15 @@
-import { useNavigate } from "react-router"
+import { Link, useNavigate } from "react-router"
 
 export function NavBar()
 {
     const navigate=useNavigate();
     return <div className="bg-white-500 h-20 pl-15 pt-3 flex border-b-1">
-            <img src="logo.png" alt="" className=" h-16  rounded-full object-cover" onClick={()=>{
+        <Link to={"/dashboard"}>
+            <img src="logo.png" alt="" className=" h-16  rounded-full object-cover cursor-pointer" onClick={()=>{
                 e.preventDefault(); 
                 navigate('/dashboard');
             }}/>
+        </Link>
             <div className="pl-300 flex justify-center pt-2">
                 <button className="bg-orange-500 rounded-xl h-10 pl-8 pr-20 w-15 text-white cursor-pointer" onClick={()=>{
                     localStorage.removeItem("token");
